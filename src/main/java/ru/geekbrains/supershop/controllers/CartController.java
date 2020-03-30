@@ -8,12 +8,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import ru.geekbrains.paymentservice.Payment;
 import ru.geekbrains.supershop.beans.Cart;
 import ru.geekbrains.supershop.services.ProductService;
+import ru.geekbrains.supershop.services.soap.PaymentService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.List;
 import java.util.UUID;
 
 @Controller
@@ -22,6 +25,7 @@ import java.util.UUID;
 public class CartController {
 
     private final Cart cart;
+    private final PaymentService paymentService;
     private final ProductService productService;
 
     @GetMapping("/add/{id}")
@@ -38,8 +42,10 @@ public class CartController {
 
     @GetMapping
     public String showCart(Model model) {
+        List<Payment> payments = paymentService.getPayments("Russia");
         model.addAttribute("cart", cart);
-        return "cart";
+        model.addAttribute("payments", payments);
+        return "cart_old";
     }
 
 }
